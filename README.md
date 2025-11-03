@@ -9,37 +9,38 @@ The goal of this project is to strengthen SQL skills from fundamentals to advanc
 Each day focuses on specific SQL topics applied to realistic healthcare-related use cases.
 All SQL files are organized by day and topic for clarity.
 
-**Topics Covered**
-**Database creation and schema design
-Data insertion, updating, and deletion
-SELECT statements and filtering with WHERE
-Sorting and limiting results with ORDER BY and TOP
-DISTINCT and aggregate functions (COUNT, SUM, AVG, MAX, MIN)
-GROUP BY and HAVING clauses
-INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL JOIN
-Subqueries and nested queries
-Common Table Expressions (CTEs)
-Window functions (RANK, ROW_NUMBER, DENSE_RANK)
-String, date, and numeric functions
-NULL handling and conditional expressions (CASE, COALESCE)
-Views and temporary tables
-Constraints (PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK, DEFAULT)
-Index creation and optimization basics
-Stored procedures and functions
-Triggers and automation use cases
-Transaction control (COMMIT, ROLLBACK)****
+Topics Covered  
+• Database creation and schema design  
+• Data insertion, updating, and deletion  
+• SELECT statements and filtering with WHERE  
+• Sorting and limiting results with ORDER BY and TOP  
+• DISTINCT and aggregate functions (COUNT, SUM, AVG, MAX, MIN)  
+• GROUP BY and HAVING clauses  
+• INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL JOIN  
+• Subqueries and nested queries  
+• Common Table Expressions (CTEs)  
+• Window functions (RANK, ROW_NUMBER, DENSE_RANK)  
+• String, date, and numeric functions  
+• NULL handling and conditional expressions (CASE, COALESCE)  
+• Views and temporary tables  
+• Constraints (PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK, DEFAULT)  
+• Index creation and optimization basics  
+• Stored procedures and functions  
+• Triggers and automation use cases  
+• Transaction control (COMMIT, ROLLBACK)  
 
-**Tools Used**
-**Microsoft SQL Server Management Studio (SSMS)
-SQL Server Database Engine
-GitHub for version control and documentation**
+Tools Used  
+• Microsoft SQL Server Management Studio (SSMS)  
+• SQL Server Database Engine  
+• GitHub for version control and documentation  
 
-**Setup Instructions**
-**Open Microsoft SQL Server Management Studio (SSMS).
-Run 01_create_healthcare_db.sql to create the database and tables.
-Run 02_insert_sample_data.sql to populate the dataset.
-Verify that all tables are correctly created and linked before starting daily practice.
-All SQL files are organized by day and topic for clarity**.
+Setup Instructions  
+1. Open Microsoft SQL Server Management Studio (SSMS).  
+2. Run 01_create_healthcare_db.sql to create the database and tables.  
+3. Run 02_insert_sample_data.sql to populate the dataset.  
+4. Verify that all tables are correctly created and linked before starting daily practice.  
+5. All SQL files are organized by day and topic for clarity.
+
 
 **About**
 This project is entirely self-built to demonstrate consistent learning and hands-on problem solving in SQL.
