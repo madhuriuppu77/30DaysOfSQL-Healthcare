@@ -10,7 +10,7 @@ Each day focuses on specific SQL topics applied to realistic healthcare-related 
 All SQL files are organized by day and topic for clarity.
 
 **Topics Covered**
-Database creation and schema design
+**Database creation and schema design
 Data insertion, updating, and deletion
 SELECT statements and filtering with WHERE
 Sorting and limiting results with ORDER BY and TOP
@@ -27,19 +27,19 @@ Constraints (PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK, DEFAULT)
 Index creation and optimization basics
 Stored procedures and functions
 Triggers and automation use cases
-Transaction control (COMMIT, ROLLBACK)
+Transaction control (COMMIT, ROLLBACK)****
 
 **Tools Used**
-Microsoft SQL Server Management Studio (SSMS)
+**Microsoft SQL Server Management Studio (SSMS)
 SQL Server Database Engine
-GitHub for version control and documentation
+GitHub for version control and documentation**
 
 **Setup Instructions**
-Open Microsoft SQL Server Management Studio (SSMS).
+**Open Microsoft SQL Server Management Studio (SSMS).
 Run 01_create_healthcare_db.sql to create the database and tables.
 Run 02_insert_sample_data.sql to populate the dataset.
 Verify that all tables are correctly created and linked before starting daily practice.
-All SQL files are organized by day and topic for clarity.
+All SQL files are organized by day and topic for clarity**.
 
 **About**
 This project is entirely self-built to demonstrate consistent learning and hands-on problem solving in SQL.
