@@ -1,5 +1,5 @@
 
-'''
+```
 **Before learning DDL (CREATE/ALTER/DROP), it is essential to understand what a database object is and how SQL Server tracks objects internally using object_id. This knowledge prevents errors, improves debugging, and forms the foundation for everything you will learn next — not just DDL, but all of SQL.**
 
 
@@ -119,4 +119,4 @@ FROM sys.foreign_keys fk;
 **-- Show distinct object types in this DB**:
 SELECT DISTINCT [type], type_desc FROM sys.objects ORDER BY [type];
 
-'''
+```
