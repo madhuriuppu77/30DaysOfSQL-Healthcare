@@ -1,37 +1,46 @@
-```
+
+#                DCL (Data Control Language)               #
+
+
 What is DCL?
+------------
+DCL (Data Control Language) is used to control access, permissions, and authorization on database objects such as tables, views, stored procedures, and schemas.
+Its purpose is to provide security, restrict unauthorized access, and ensure controlled data usage.
 
-Data Control Language (DCL) in SQL is used to control access, authorization, and permissions on database objects such as tables, views, procedures, and schemas.
-Its primary goal is to protect data, enforce security, and ensure proper access control inside a database system.
+Why DCL is Important?
+---------------------
+DCL ensures that only authorized users have the appropriate level of access.
+Example use cases:
+1) Doctors can update medical records
+2) Nurses can record vitals but not modify diagnosis
+3) Receptionists can view schedules but cannot modify medical data
+4) Billing team can update invoices but not edit patient details
+5) Admin users have full control
 
- Why DCL is Important?
+DCL supports data privacy rules such as HIPAA, GDPR, and ISO security standards.
 
-DCL is essential because modern applications involve multiple users, roles, and departments, and not everyone should be allowed to see or modify sensitive data.
-Example:
-1)Doctors can update medical records
-2)Nurses can view and record vitals
-3)Receptionists can schedule appointments
-4)Billing staff can update invoices
-5)Administrators have full access
-
-DCL helps maintain confidentiality, privacy, and compliance standards (HIPAA, GDPR, ISO).
-Main DCL Commands:
-
+------------------------------------------------------------
+Main DCL Commands
+------------------------------------------------------------
 | Command                        | Purpose                                        |
 | ------------------------------ | ---------------------------------------------- |
-| **GRANT**                      | Assigns permissions to users or roles          |
-| **REVOKE**                     | Removes previously granted permissions         |
-| **DENY** (SQL Server specific) | Explicitly blocks permissions, even if granted |
+| GRANT                          | Assign permissions to users or roles           |
+| REVOKE                         | Remove previously granted permissions          |
+| DENY (SQL Server specific)     | Explicitly block permissions, even if granted  |
 
-DCL Permission Types:
-
+------------------------------------------------------------
+Types of Permissions in DCL
+------------------------------------------------------------
 | Permission        | Purpose                         |
 | ----------------- | ------------------------------- |
-| **SELECT**        | Read data                       |
-| **INSERT**        | Add new data                    |
-| **UPDATE**        | Modify existing data            |
-| **DELETE**        | Remove data                     |
-| **EXECUTE**       | Run stored procedures/functions |
-| **CONTROL / ALL** | Full privileges                 |
+| SELECT            | Read data                       |
+| INSERT            | Add new data                    |
+| UPDATE            | Modify existing data            |
+| DELETE            | Remove records                  |
+| EXECUTE           | Run stored procedures/functions |
+| CONTROL / ALL     | Full privileges                 |
 
-```
+------------------------------------------------------------
+End of DCL Theory
+------------------------------------------------------------
+
