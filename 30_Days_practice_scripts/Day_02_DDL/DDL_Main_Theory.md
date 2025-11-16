@@ -1,4 +1,4 @@
-```
+#####
 **WHY WE USE
 IF OBJECT_ID('name','U') IS NOT NULL DROP TABLE name**???
 This pattern exists because SQL Server does NOT allow creating an object if an object with the same name already exists.
@@ -18,7 +18,7 @@ object_id('Patients','U') returns the internal ID of the object only if:
 1)the object exists
 2)the type matches (e.g., 'U' = user table, 'V' = view, 'P' = procedure)
 3)If it doesn’t exist, object_id = NULL → DROP is skipped → no error.
-
+####
 **Why specify type ('U', 'V', 'P', etc.)?**
 Because SQL Server can have multiple objects with the same name but different types, e.g.:
       Patients → table
@@ -94,4 +94,4 @@ It allows you to:
 5)Build schemas and organize objects
 6)Prepare environments for testing
 7)Every database developer MUST know DDL.
-```
+
