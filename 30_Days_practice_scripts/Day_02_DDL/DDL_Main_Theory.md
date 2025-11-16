@@ -3,7 +3,7 @@
 IF OBJECT_ID('name','U') IS NOT NULL DROP TABLE name**???
 This pattern exists because SQL Server does NOT allow creating an object if an object with the same name already exists.
 **Reason 1 — To avoid errors like:**
-                         ERROR   ***There is already an object named 'Patients' in the database.***
+                         ERROR   ***There is already an object named 'Patients' in the database.**
 SQL Server does not “overwrite” tables or views.
 So before creating a new version, you must remove the old one.
 **Reason 2 — To guarantee a clean, predictable environment**
