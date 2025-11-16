@@ -2,7 +2,7 @@
 -- SQL Practice Queries for Healthcare Database
 -- Author: Madhuri Uppunuthula
 -- Purpose: SQL practice covering SELECT, WHERE, JOINs, GROUP BY, HAVING, Aggregation
---############################################################
+--#############################################################
 
 --#### Basic SELECT & WHERE (Patient, Doctor, Visit data) ####
 
