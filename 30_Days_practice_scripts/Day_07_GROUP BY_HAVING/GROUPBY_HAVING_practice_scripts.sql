@@ -1,4 +1,4 @@
-------- GROUP BY + HAVING SQL QUESTIONS (Healthcare Domain)
+------- GROUP BY + HAVING SQL QUESTIONS (Healthcare Domain)-
 
 --1. Count how many patients exist in each city.
 SELECT * FROM Patients
