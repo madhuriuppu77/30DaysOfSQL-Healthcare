@@ -1,6 +1,6 @@
 
 (1) What is exactly a Function and why do we need it?
----------------------------------------------------------
+----------------------------------------------------------
 A function in SQL is a ready-made operation provided by the
 database that performs a specific task and returns a result.
 
