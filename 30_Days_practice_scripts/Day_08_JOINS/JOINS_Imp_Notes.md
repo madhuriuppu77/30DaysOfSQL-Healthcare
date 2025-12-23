@@ -1,4 +1,4 @@
-(3) SQL JOINS — LEFT JOIN, ANTI JOIN & FILTERING LOGIC
+ SQL JOINS — LEFT JOIN, ANTI JOIN & FILTERING LOGIC
 ---------------------------------------------------------
 SQL JOINs are used to combine data from multiple tables
 based on a related column (usually a key).
@@ -27,7 +27,7 @@ LEFT JOIN preserves LEFT table rows.
 
 
 ---------------------------------------------------------
-1) LEFT JOIN + WHERE ON RIGHT TABLE (KILLS LEFT JOIN)
+**1) LEFT JOIN + WHERE ON RIGHT TABLE (KILLS LEFT JOIN)**
 ---------------------------------------------------------
 This is the MOST COMMON SQL mistake.
 
@@ -41,24 +41,27 @@ LEFT JOIN behaves like INNER JOIN.
 
 Example (WRONG USAGE):
 ---------------------------------------------------------
-SELECT p.name, v.department
-FROM patients p
-LEFT JOIN visits v
-    ON p.patient_id = v.patient_id
-WHERE v.department = 'ENT';
+
+    SELECT p.name, v.department
+    FROM patients p
+    LEFT JOIN visits v
+        ON p.patient_id = v.patient_id
+    WHERE v.department = 'ENT';
 
 
 
 Step-by-step explanation:
 ---------------------------------------------------------
 1) LEFT JOIN runs first
+   
    - Patients without visits get v.department = NULL
 
-2) WHERE clause runs next
+3) WHERE clause runs next
+   
    - WHERE v.department = 'ENT'
    - NULL != 'ENT'
 
-3) Rows with NULL are filtered out
+5) Rows with NULL are filtered out
 
 Final Result:
 ---------------------------------------------------------
@@ -77,7 +80,7 @@ WHERE condition on RIGHT table
 
 
 ---------------------------------------------------------
-2) LEFT JOIN + WHERE ON LEFT TABLE (SAFE)
+**2) LEFT JOIN + WHERE ON LEFT TABLE (SAFE)**
 ---------------------------------------------------------
 Filtering LEFT table is ALWAYS SAFE.
 
@@ -89,11 +92,12 @@ LEFT JOIN never creates NULLs on LEFT table.
 
 Example (CORRECT USAGE):
 ---------------------------------------------------------
-SELECT p.name, v.department
-FROM patients p
-LEFT JOIN visits v
-    ON p.patient_id = v.patient_id
-WHERE p.gender = 'F';
+
+    SELECT p.name, v.department
+    FROM patients p
+    LEFT JOIN visits v
+        ON p.patient_id = v.patient_id
+    WHERE p.gender = 'F';
 
 
 
@@ -114,7 +118,7 @@ WHERE condition on LEFT table
 
 
 ---------------------------------------------------------
-3) CORRECT WAY TO FILTER RIGHT TABLE (USE ON CLAUSE)
+**3) CORRECT WAY TO FILTER RIGHT TABLE (USE ON CLAUSE)**
 ---------------------------------------------------------
 If you WANT to filter RIGHT table
 WITHOUT losing unmatched LEFT rows,
@@ -124,11 +128,12 @@ move the condition into the ON clause.
 
 Example (CORRECT & RECOMMENDED):
 ---------------------------------------------------------
-SELECT p.name, v.department
-FROM patients p
-LEFT JOIN visits v
-    ON p.patient_id = v.patient_id
-   AND v.department = 'ENT';
+
+    SELECT p.name, v.department
+    FROM patients p
+    LEFT JOIN visits v
+        ON p.patient_id = v.patient_id
+       AND v.department = 'ENT';
 
 
 
@@ -158,7 +163,7 @@ Filter RIGHT table
 
 
 ---------------------------------------------------------
-4) ANTI JOIN (FIND UNMATCHED / MISSING DATA)
+**4) ANTI JOIN (FIND UNMATCHED / MISSING DATA)**
 ---------------------------------------------------------
 ANTI JOIN is used to find rows in LEFT table
 that DO NOT have a match in RIGHT table.
@@ -173,11 +178,12 @@ This is extremely important in:
 
 ANTI JOIN USING LEFT JOIN + IS NULL
 ---------------------------------------------------------
-SELECT p.name
-FROM patients p
-LEFT JOIN visits v
-    ON p.patient_id = v.patient_id
-WHERE v.patient_id IS NULL;
+
+    SELECT p.name
+    FROM patients p
+    LEFT JOIN visits v
+        ON p.patient_id = v.patient_id
+    WHERE v.patient_id IS NULL;
 
 
 
@@ -192,13 +198,14 @@ Why this works:
 ---------------------------------------------------------
 ANTI JOIN USING NOT EXISTS (BEST PRACTICE)
 ---------------------------------------------------------
-SELECT p.name
-FROM patients p
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM visits v
-    WHERE v.patient_id = p.patient_id
-);
+
+    SELECT p.name
+    FROM patients p
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM visits v
+        WHERE v.patient_id = p.patient_id
+    );
 
 
 
@@ -220,11 +227,12 @@ NOT IN can FAIL if subquery returns NULL.
 
 DANGEROUS:
 ---------------------------------------------------------
-SELECT p.name
-FROM patients p
-WHERE p.patient_id NOT IN (
-    SELECT patient_id FROM visits
-);
+
+    SELECT p.name
+    FROM patients p
+    WHERE p.patient_id NOT IN (
+        SELECT patient_id FROM visits
+    );
 
 
 
@@ -242,16 +250,17 @@ Always prefer NOT EXISTS for anti joins.
 
 
 ---------------------------------------------------------
-5) WHERE vs ON — EXECUTION MENTAL MODEL
+**5) WHERE vs ON — EXECUTION MENTAL MODEL**
 ---------------------------------------------------------
 Understanding execution order explains EVERYTHING.
 
 Simplified execution order:
 ---------------------------------------------------------
-1) FROM
-2) JOIN ... ON     → matching happens here
-3) WHERE           → filtering happens here
-4) SELECT
+
+    1) FROM
+    2) JOIN ... ON     → matching happens here
+    3) WHERE           → filtering happens here
+    4) SELECT
 
 
 
@@ -271,7 +280,7 @@ WHERE = which rows survive
 
 
 ---------------------------------------------------------
-6) MULTIPLE MATCHES CAUSE ROW MULTIPLICATION
+**6) MULTIPLE MATCHES CAUSE ROW MULTIPLICATION**
 ---------------------------------------------------------
 If RIGHT table has multiple matching rows,
 LEFT table rows are repeated.
@@ -298,7 +307,7 @@ Solutions:
 
 
 ---------------------------------------------------------
-7) LEFT JOIN + COUNT GOTCHA
+**7) LEFT JOIN + COUNT GOTCHA**
 ---------------------------------------------------------
 COUNT behavior differs with LEFT JOIN.
 
@@ -330,7 +339,7 @@ Use COUNT(right_table.key)
 
 
 ---------------------------------------------------------
-8) RIGHT JOIN (RARELY NEEDED)
+**8) RIGHT JOIN (RARELY NEEDED)**
 ---------------------------------------------------------
 RIGHT JOIN is optional knowledge.
 
@@ -340,7 +349,7 @@ by swapping table positions.
 
 
 ---------------------------------------------------------
-9) FULL OUTER JOIN (RECONCILIATION USE)
+**9) FULL OUTER JOIN (RECONCILIATION USE)**
 ---------------------------------------------------------
 FULL JOIN returns:
 - Matching rows
@@ -394,6 +403,17 @@ SUMMARY — EASY WAY TO REMEMBER
    → use ANTI JOIN
 
 5) Prefer NOT EXISTS over NOT IN
+
+
+
+---------------------------------------------------------
+ADDITIONAL NOTES 
+---------------------------------------------------------
+- LEFT JOIN problems are almost always caused by WHERE clause misuse
+- ON clause decides matching logic
+- WHERE clause decides row survival
+- If you understand this difference, joins become easy
+- These rules apply to ALL SQL databases (MySQL, PostgreSQL, SQL Server, Oracle)
 
 ---------------------------------------------------------
 
