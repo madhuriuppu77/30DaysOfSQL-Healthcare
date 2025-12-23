@@ -269,7 +269,7 @@ Use:
 
 TIP 9: JOIN ORDER DOES NOT CHANGE RESULTS (BUT AFFECTS PERFORMANCE)
 -------------------------------------------------------------------
-Query optimizer rearranges joins internally.
+Query optimizer rearranges joins internally..
 
 ----------------------------------------------------
 
