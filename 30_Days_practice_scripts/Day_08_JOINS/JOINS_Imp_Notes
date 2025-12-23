@@ -1,0 +1,399 @@
+(3) SQL JOINS — LEFT JOIN, ANTI JOIN & FILTERING LOGIC
+---------------------------------------------------------
+SQL JOINs are used to combine data from multiple tables
+based on a related column (usually a key).
+
+LEFT JOIN behavior and filtering logic are one of the
+MOST IMPORTANT and MOST CONFUSING topics in SQL.
+
+These rules are critical for:
+- Real-world projects
+- Debugging wrong results
+- Interviews
+- Data quality checks
+- Reporting accuracy
+
+
+
+KEY IDEA OF LEFT JOIN
+---------------------------------------------------------
+LEFT JOIN returns:
+- ALL rows from LEFT table
+- Matching rows from RIGHT table
+- NULLs when there is NO match in RIGHT table
+
+LEFT JOIN preserves LEFT table rows.
+
+
+
+---------------------------------------------------------
+1) LEFT JOIN + WHERE ON RIGHT TABLE (KILLS LEFT JOIN)
+---------------------------------------------------------
+This is the MOST COMMON SQL mistake.
+
+When you apply a WHERE condition on the RIGHT table,
+all NULL rows produced by LEFT JOIN are removed.
+
+As a result:
+LEFT JOIN behaves like INNER JOIN.
+
+
+
+Example (WRONG USAGE):
+---------------------------------------------------------
+SELECT p.name, v.department
+FROM patients p
+LEFT JOIN visits v
+    ON p.patient_id = v.patient_id
+WHERE v.department = 'ENT';
+
+
+
+Step-by-step explanation:
+---------------------------------------------------------
+1) LEFT JOIN runs first
+   - Patients without visits get v.department = NULL
+
+2) WHERE clause runs next
+   - WHERE v.department = 'ENT'
+   - NULL != 'ENT'
+
+3) Rows with NULL are filtered out
+
+Final Result:
+---------------------------------------------------------
+- Only patients WITH ENT visits
+- Patients without visits are LOST
+- LEFT JOIN becomes INNER JOIN
+
+
+
+KEY RULE:
+---------------------------------------------------------
+WHERE condition on RIGHT table
+→ removes NULLs
+→ kills LEFT JOIN
+
+
+
+---------------------------------------------------------
+2) LEFT JOIN + WHERE ON LEFT TABLE (SAFE)
+---------------------------------------------------------
+Filtering LEFT table is ALWAYS SAFE.
+
+Why?
+Because LEFT table rows always exist.
+LEFT JOIN never creates NULLs on LEFT table.
+
+
+
+Example (CORRECT USAGE):
+---------------------------------------------------------
+SELECT p.name, v.department
+FROM patients p
+LEFT JOIN visits v
+    ON p.patient_id = v.patient_id
+WHERE p.gender = 'F';
+
+
+
+Explanation:
+---------------------------------------------------------
+- WHERE filters only patients
+- Visits may exist or may be NULL
+- LEFT JOIN behavior is preserved
+
+
+
+KEY RULE:
+---------------------------------------------------------
+WHERE condition on LEFT table
+→ SAFE
+→ LEFT JOIN remains LEFT JOIN
+
+
+
+---------------------------------------------------------
+3) CORRECT WAY TO FILTER RIGHT TABLE (USE ON CLAUSE)
+---------------------------------------------------------
+If you WANT to filter RIGHT table
+WITHOUT losing unmatched LEFT rows,
+move the condition into the ON clause.
+
+
+
+Example (CORRECT & RECOMMENDED):
+---------------------------------------------------------
+SELECT p.name, v.department
+FROM patients p
+LEFT JOIN visits v
+    ON p.patient_id = v.patient_id
+   AND v.department = 'ENT';
+
+
+
+Explanation:
+---------------------------------------------------------
+- ON clause controls MATCHING logic
+- LEFT JOIN still keeps all patients
+- ENT visits are matched
+- Non-ENT or no visits become NULL
+
+
+
+Result behavior:
+---------------------------------------------------------
+- Patient with ENT visit → department = 'ENT'
+- Patient with non-ENT visit → department = NULL
+- Patient with no visit → department = NULL
+
+
+
+KEY RULE:
+---------------------------------------------------------
+Filter RIGHT table
+→ put condition in ON clause
+→ NOT in WHERE clause
+
+
+
+---------------------------------------------------------
+4) ANTI JOIN (FIND UNMATCHED / MISSING DATA)
+---------------------------------------------------------
+ANTI JOIN is used to find rows in LEFT table
+that DO NOT have a match in RIGHT table.
+
+This is extremely important in:
+- Missing data detection
+- Audits
+- Business gap analysis
+- Data quality checks
+
+
+
+ANTI JOIN USING LEFT JOIN + IS NULL
+---------------------------------------------------------
+SELECT p.name
+FROM patients p
+LEFT JOIN visits v
+    ON p.patient_id = v.patient_id
+WHERE v.patient_id IS NULL;
+
+
+
+Why this works:
+---------------------------------------------------------
+- LEFT JOIN creates NULL for unmatched visits
+- WHERE v.patient_id IS NULL
+- Returns ONLY unmatched patients
+
+
+
+---------------------------------------------------------
+ANTI JOIN USING NOT EXISTS (BEST PRACTICE)
+---------------------------------------------------------
+SELECT p.name
+FROM patients p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM visits v
+    WHERE v.patient_id = p.patient_id
+);
+
+
+
+Why NOT EXISTS is preferred:
+---------------------------------------------------------
+- NULL safe
+- Better performance
+- Clear intent
+- Works correctly in all cases
+
+
+
+---------------------------------------------------------
+ANTI JOIN vs NOT IN (IMPORTANT WARNING)
+---------------------------------------------------------
+NOT IN can FAIL if subquery returns NULL.
+
+
+
+DANGEROUS:
+---------------------------------------------------------
+SELECT p.name
+FROM patients p
+WHERE p.patient_id NOT IN (
+    SELECT patient_id FROM visits
+);
+
+
+
+Problem:
+---------------------------------------------------------
+If visits.patient_id contains even ONE NULL,
+the result may return ZERO rows.
+
+
+
+SAFE:
+---------------------------------------------------------
+Always prefer NOT EXISTS for anti joins.
+
+
+
+---------------------------------------------------------
+5) WHERE vs ON — EXECUTION MENTAL MODEL
+---------------------------------------------------------
+Understanding execution order explains EVERYTHING.
+
+Simplified execution order:
+---------------------------------------------------------
+1) FROM
+2) JOIN ... ON     → matching happens here
+3) WHERE           → filtering happens here
+4) SELECT
+
+
+
+Why LEFT JOIN breaks:
+---------------------------------------------------------
+- LEFT JOIN creates NULLs
+- WHERE removes rows
+- ON controls matching, WHERE removes rows
+
+
+
+MEMORY RULE:
+---------------------------------------------------------
+ON  = how rows match
+WHERE = which rows survive
+
+
+
+---------------------------------------------------------
+6) MULTIPLE MATCHES CAUSE ROW MULTIPLICATION
+---------------------------------------------------------
+If RIGHT table has multiple matching rows,
+LEFT table rows are repeated.
+
+
+
+Example:
+---------------------------------------------------------
+- 1 patient
+- 3 visits
+
+LEFT JOIN result:
+---------------------------------------------------------
+Patient row appears 3 times
+
+
+
+Solutions:
+---------------------------------------------------------
+1) GROUP BY
+2) Aggregate RIGHT table first
+3) DISTINCT (only if logically correct)
+
+
+
+---------------------------------------------------------
+7) LEFT JOIN + COUNT GOTCHA
+---------------------------------------------------------
+COUNT behavior differs with LEFT JOIN.
+
+
+
+Example:
+---------------------------------------------------------
+SELECT p.name, COUNT(v.visit_id) AS total_visits
+FROM patients p
+LEFT JOIN visits v
+    ON p.patient_id = v.patient_id
+GROUP BY p.name;
+
+
+
+Explanation:
+---------------------------------------------------------
+- COUNT(column) ignores NULL
+- Patients with no visits → count = 0
+- This is the CORRECT way
+
+
+
+WARNING:
+---------------------------------------------------------
+COUNT(*) counts rows, not matches
+Use COUNT(right_table.key)
+
+
+
+---------------------------------------------------------
+8) RIGHT JOIN (RARELY NEEDED)
+---------------------------------------------------------
+RIGHT JOIN is optional knowledge.
+
+Any RIGHT JOIN can be rewritten as LEFT JOIN
+by swapping table positions.
+
+
+
+---------------------------------------------------------
+9) FULL OUTER JOIN (RECONCILIATION USE)
+---------------------------------------------------------
+FULL JOIN returns:
+- Matching rows
+- Unmatched LEFT rows
+- Unmatched RIGHT rows
+
+Used for:
+---------------------------------------------------------
+- Data reconciliation
+- Audits
+- Comparing two datasets
+
+
+
+---------------------------------------------------------
+FINAL CHECKLIST BEFORE USING JOINS
+---------------------------------------------------------
+Ask yourself:
+
+1) Do I need ALL rows from left table?
+   → YES → LEFT JOIN
+   → NO  → INNER JOIN
+
+2) Am I filtering right table?
+   → Use ON clause
+
+3) Do I need missing/unmatched data?
+   → Use ANTI JOIN
+
+4) Can duplicates occur?
+   → Check 1-to-many relationships
+
+5) Can NULLs exist?
+   → Avoid NOT IN, use NOT EXISTS
+
+
+
+---------------------------------------------------------
+SUMMARY — EASY WAY TO REMEMBER
+---------------------------------------------------------
+1) LEFT JOIN + WHERE on RIGHT table
+   → kills LEFT JOIN (acts like INNER JOIN)
+
+2) LEFT JOIN + WHERE on LEFT table
+   → safe, LEFT JOIN preserved
+
+3) Filter RIGHT table safely
+   → use AND in ON clause
+
+4) Find unmatched data
+   → use ANTI JOIN
+
+5) Prefer NOT EXISTS over NOT IN
+
+---------------------------------------------------------
+
