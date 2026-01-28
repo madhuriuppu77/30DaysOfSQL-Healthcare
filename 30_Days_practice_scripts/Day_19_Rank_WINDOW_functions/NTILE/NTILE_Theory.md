@@ -98,150 +98,170 @@ Top spenders first
 
 **6) NULL HANDLING IN NTILE**
 
-NTILE does not ignore NULLs automatically.
+NTILE does not ignore NULLs automatically,
 NULLs participate in ordering.
 
 Best practice:
-Push NULLs to the end or remove them explicitly.
+
+    Push NULLs to the end or remove them explicitly.
 
 Push NULLs last:
-ORDER BY CASE WHEN col IS NULL THEN 1 ELSE 0 END, col DESC
+
+    ORDER BY CASE WHEN col IS NULL THEN 1 ELSE 0 END, col DESC
 
 Ignore NULLs:
-WHERE col IS NOT NULL
+ 
+    WHERE col IS NOT NULL
 
 7) FRAME CLAUSES AND NTILE
 
 NTILE does not support frame clauses like
-ROWS BETWEEN or RANGE BETWEEN.
+
+    ROWS BETWEEN or RANGE BETWEEN.
 
 Why:
-NTILE operates on the full partition after sorting.
-Frames are row-by-row calculations, NTILE is distribution-based.
+
+     NTILE operates on the full partition after sorting.
+     Frames are row-by-row calculations, NTILE is distribution-based.
 
 This is valid:
-NTILE(4) OVER (PARTITION BY dept ORDER BY salary DESC)
+
+    NTILE(4) OVER (PARTITION BY dept ORDER BY salary DESC)
 
 This is invalid:
-NTILE(4) OVER (
-  PARTITION BY dept
-  ORDER BY salary
-  ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-)
 
-8) REAL PROJECT USE CASES
+    NTILE(4) OVER (
+      PARTITION BY dept
+      ORDER BY salary
+      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    )
 
-Customer segmentation
+**8) REAL PROJECT USE CASES**
+
+Customer segmentation:
+
 Divide customers into quartiles based on spending
 
-SELECT
-  customer_id,
-  NTILE(4) OVER (ORDER BY total_spend DESC) AS spend_segment
-FROM Customers;
+    SELECT
+      customer_id,
+      NTILE(4) OVER (ORDER BY total_spend DESC) AS spend_segment
+    FROM Customers;
 
-Healthcare risk grouping
+Healthcare risk grouping:
+
 Split patients into risk tiers by number of visits
 
-SELECT
-  patient_id,
-  NTILE(3) OVER (ORDER BY visit_count DESC) AS risk_group
-FROM Patient_Stats;
+    SELECT
+      patient_id,
+      NTILE(3) OVER (ORDER BY visit_count DESC) AS risk_group
+    FROM Patient_Stats;
 
-Sales performance
+Sales performance:
+
 Bucket sales reps into performance tiers per region
 
-SELECT
-  rep_id,
-  region,
-  NTILE(5) OVER (PARTITION BY region ORDER BY revenue DESC) AS performance_band
-FROM Sales;
+    SELECT
+      rep_id,
+      region,
+      NTILE(5) OVER (PARTITION BY region ORDER BY revenue DESC) AS performance_band
+    FROM Sales;
 
-Billing analysis
+Billing analysis:
+
 Top, middle, bottom revenue doctors per department
 
-SELECT
-  doctor_id,
-  department,
-  NTILE(3) OVER (PARTITION BY department ORDER BY total_billing DESC) AS revenue_group
-FROM Doctor_Billing;
+    SELECT
+      doctor_id,
+      department,
+      NTILE(3) OVER (PARTITION BY department ORDER BY total_billing DESC) AS revenue_group
+    FROM Doctor_Billing;
 
-9) NTILE VS OTHER WINDOW FUNCTIONS
+**9) NTILE VS OTHER WINDOW FUNCTIONS**
 
-NTILE
-Equal row distribution
-Used for segmentation
+NTILE:
 
-RANK
-Same values get same rank
-Gaps in ranking
+    Equal row distribution
+    Used for segmentation
 
-DENSE_RANK
-Same values get same rank
-No gaps
+RANK:
 
-ROW_NUMBER
-Unique sequential numbering
-No grouping
+    Same values get same rank
+    Gaps in ranking
+
+DENSE_RANK:
+
+    Same values get same rank
+    No gaps
+
+ROW_NUMBER:
+
+    Unique sequential numbering
+    No grouping
 
 Use NTILE when you need percentiles or buckets.
 
-10) PERFORMANCE CONSIDERATIONS
+**10) PERFORMANCE CONSIDERATIONS**
 
-ORDER BY is expensive
-Ensure sort columns are indexed where possible
+ORDER BY is expensive,
+Ensure sort columns are indexed where possible.
 
-PARTITION BY increases cost
-More partitions = more sorting
+PARTITION BY increases cost,
+More partitions = more sorting.
 
-Use NTILE after aggregation
-Aggregate first, then apply NTILE
+Use NTILE after aggregation,
+Aggregate first, then apply NTILE.
 
 Good:
-Aggregate → NTILE
+
+    Aggregate → NTILE
 
 Bad:
-NTILE on raw transactional data
+
+    NTILE on raw transactional data
 
 Avoid NTILE on very large partitions if possible
 
-11) COMMON MISTAKES
+**11) COMMON MISTAKES**
 
-Using NTILE without ORDER BY
-This is invalid SQL
+Using NTILE without ORDER BY,
+This is invalid SQL.
 
-Expecting equal value ranges
-NTILE distributes rows, not values
+Expecting equal value ranges,
+NTILE distributes rows, not values.
 
-Forgetting NULL handling
-Leads to skewed buckets
+Forgetting NULL handling,
+Leads to skewed buckets.
 
-Using NTILE when percentile is needed
-Use PERCENTILE_CONT instead
+Using NTILE when percentile is needed,
+Use PERCENTILE_CONT instead.
 
-12) INTERVIEW TIPS
+**12) INTERVIEW TIPS**
 
-Explain NTILE as row-based distribution
-Not value-based grouping
+Explain NTILE as row-based distribution,
+Not value-based grouping.
 
-Mention extra rows go to lower buckets
+Mention extra rows go to lower buckets.
 
-Always talk about ORDER BY importance
+Always talk about ORDER BY importance.
 
-State that NTILE does not support frame clauses
+State that NTILE does not support frame clauses.
 
-Be ready to explain difference vs RANK and ROW_NUMBER
+Be ready to explain difference vs RANK and ROW_NUMBER.
 
-Say when NTILE is preferred
-Segmentation, quartiles, deciles, bucketing
+Say when NTILE is preferred,
+Segmentation, quartiles, deciles, bucketing.
 
-13) WHEN NOT TO USE NTILE
+**13) WHEN NOT TO USE NTILE**
 
-When you need exact percentiles
-When value ranges matter
-When partitions are extremely skewed
-When NULLs dominate the dataset
+When you need exact percentiles.
 
-14) ONE-LINE SUMMARY
+When value ranges matter.
+
+When partitions are extremely skewed.
+
+When NULLs dominate the dataset.
+
+**14) ONE-LINE SUMMARY**
 
 NTILE is used to evenly distribute rows into fixed buckets after sorting,
 commonly used for segmentation, quartiles, and ranking bands in analytics.
